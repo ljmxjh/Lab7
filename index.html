@@ -114,18 +114,21 @@
       address += sign;
       fetch(address)
         .then(function (response) {
-            return response.json();
-         
+          if (response.ok) {
+            return response.json()
+          } else if (response.status === 404) {
+            return Promise.reject('error 404')
+          }
         })
+
         .then(function (data) {
-          if(data.value==null){
-            output.append("Network Error: 404");
-          }
-          else{
           output.append(JSON.stringify(data));
-          }
+
         })
-        
+
+        .catch(error => output.append("Network Error:"+error));
+
+
 
 
 
